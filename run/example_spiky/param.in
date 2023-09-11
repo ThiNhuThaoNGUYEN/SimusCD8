@@ -1,0 +1,21 @@
+#########################
+# Simulation parameters
+#########################
+PRNG_SEED          1421746927
+MAXTIME            100.0
+DT                 0.1 
+ADD_POPULATION     500 STEM SPIKY MOBILE 30 1.0
+ADD_POPULATION     400 CANCER SYNC_CLOCK MOBILE 40 1.0
+
+#########################
+# Cell parameters
+#########################
+R_RATIO            0.90
+
+#########################
+# Output parameters
+#########################
+SIGNAL  SPIKY_1 
+SIGNAL  CLOCK
+SIGNAL  DEATH
+# SIGNAL  NON_EXISTENT
