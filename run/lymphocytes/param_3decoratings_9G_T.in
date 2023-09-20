@@ -1,12 +1,12 @@
 #########################
 # Simulation parameters
 #######################
-PRNG_SEED          AUTO
+PRNG_SEED          1421746960
 MAXTIME            960.
 DT                 0.1
 # NICHE              LYMPHOCYTE 1.1 
-ADD_POPULATION     140 LYMPHOCYTE LYMPHOCYTE MOTILE 10 1.0
-ADD_POPULATION	   100 APC LYMPHOCYTE IMMOBILE 10 1.0
+ADD_POPULATION     70 LYMPHOCYTE LYMPHOCYTE MOTILE 10 1.0
+ADD_POPULATION	   50 APC LYMPHOCYTE IMMOBILE 10 1.0
 
 #########################
 # Cell parameters
