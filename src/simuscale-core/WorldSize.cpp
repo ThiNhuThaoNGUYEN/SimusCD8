@@ -30,7 +30,8 @@
 
 #include "Alea.h"
 #include "Coordinates.h"
-
+#include <cmath>
+#include <algorithm>
 
 // =================================================================
 //                    Definition of static attributes
@@ -67,12 +68,36 @@ void WorldSize::ValidateMovement(Coordinates<double>& dpos,
 /**
  * Returns a random position within the world boundaries (margin excluded).
  */
-Coordinates<double> WorldSize::RandomPos(double radius, double floor_z) {
-  Coordinates<double> pos;
-  pos.x = margin_.x + radius + size_.x / 3.0 +
+//Coordinates<double> WorldSize::RandomPos(double radius, double floor_z) {
+Coordinates<double> WorldSize::RandomPos(double radius, double floor_z,double theta, double cos_phi, double sin_phi) { 
+Coordinates<double> pos;
+/* pos.x = margin_.x + radius + size_.x / 3.0 +
           (size_.x / 3.0 - 2 * radius) * (Alea::random());
   pos.y = margin_.y + radius + size_.y / 3.0 +
           (size_.y / 3.0 - 2 * radius) * (Alea::random());
   pos.z = margin_.z + radius + floor_z;
-  return pos;
+*/
+    pos.x = margin_.x+std::min(abs( (-floor_z/3. + radius)* Alea::gaussian_random() * cos_phi*sin(theta)+(Alea::gaussian_random()*floor_z/2.)),  size_.x -radius-margin_.x );
+    pos.y =  margin_.y +std::min(abs((-floor_z/3. + radius)* Alea::gaussian_random() *sin_phi*sin(theta)+ (Alea::gaussian_random()*floor_z/2.)), size_.y -radius -margin_.y );
+    pos.z =  margin_.z + std::min(abs((radius-floor_z/3.)*Alea::gaussian_random()*cos(theta)+(Alea::gaussian_random()*floor_z/2.)), size_.z-radius);
+  
+return pos;
+}
+Coordinates<double> WorldSize::RandomPos_APC (double radius, double floor_z,double theta, double cos_phi, double sin_phi) {
+  Coordinates<double> pos;
+/* pos.x = margin_.x + radius + size_.x / 3.0 +
+          (size_.x / 3.0 - 2 * radius) * (Alea::random());
+  pos.y = margin_.y + radius + size_.y / 3.0 +
+          (size_.y / 3.0 - 2 * radius) * (Alea::random());
+  pos.z = margin_.z + radius + floor_z;
+*/
+/*    pos.x = margin_.x+std::min(abs( (floor_z + radius)* Alea::gaussian_random() * cos_phi*sin(theta)+  (Alea::gaussian_random() -Alea::random())*floor_z),  size_.x -radius-margin_.x );
+    pos.y =  margin_.y +std::min(abs((floor_z + radius)* Alea::gaussian_random() *sin_phi*sin(theta)+ (Alea::gaussian_random() - Alea::random())*floor_z), size_.y -radius -margin_.y );
+    pos.z =  margin_.z + std::min(abs((radius+floor_z)*Alea::gaussian_random()*cos(theta)- (Alea::gaussian_random()-Alea::random())*floor_z), size_.z-radius);
+*/
+    pos.x = margin_.x+std::min(abs( (floor_z/3. + radius)* Alea::gaussian_random() * cos_phi*sin(theta)-(Alea::gaussian_random()*floor_z/2.)),  size_.x -radius-margin_.x );
+    pos.y =  margin_.y +std::min(abs((floor_z/3. + radius)* Alea::gaussian_random() *sin_phi*sin(theta)- (Alea::gaussian_random()*floor_z/2.)), size_.y -radius -margin_.y );
+    pos.z =  margin_.z + std::min(abs((radius+floor_z/3.)*Alea::gaussian_random()*cos(theta)- (Alea::gaussian_random()*floor_z/2.)), size_.z-radius);
+
+return pos;
 }
