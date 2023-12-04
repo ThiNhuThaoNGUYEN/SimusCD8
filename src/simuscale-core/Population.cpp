@@ -65,7 +65,6 @@ Population::~Population(void) {
   }
 }
 
-
 // =================================================================
 //                            Public Methods
 // =================================================================
@@ -120,8 +119,16 @@ void Population::GenerateNiche(const NicheParams& niche_params) {
  */
 void Population::AddCells(const PopulationParams& popParams,
                           const CellParams& cellParams) {
-  double floor_z = 2.0; // TODO(dpa) Magic number !
+  double floor_z = 50.0; // TODO(dpa) Magic number !
+double theta = 2. * M_PI * Alea::random();
+  double cos_phi = 2. * Alea::random() - 1;
+  double sin_phi = sqrt(1 - cos_phi*cos_phi);
+
+
   for (int32_t i = 0; i < popParams.nb_cells(); i++) {
+
+
+//if (popParams.cell_type()== APC)
     // Determine the initial volume of the cell.
     // Value in [vmin, 2*vmin)
     CellSize size(popParams.volume_min() * (1 + Alea::random()),
@@ -130,7 +137,11 @@ void Population::AddCells(const PopulationParams& popParams,
     // Determine the initial position of the cell
     // Center cannot be within internal_radius of a wall
     Coordinates<double> pos =
-        WorldSize::RandomPos(size.internal_radius(), floor_z);
+        WorldSize::RandomPos(size.internal_radius(), floor_z, theta, cos_phi,sin_phi);
+if (popParams.cell_type()== APC) {
+Coordinates<double> pos =
+        WorldSize::RandomPos_APC(size.internal_radius(), floor_z, theta, cos_phi,sin_phi);
+}
 
     try {
       cell_list_.push_back(

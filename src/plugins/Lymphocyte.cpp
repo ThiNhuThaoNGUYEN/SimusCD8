@@ -488,7 +488,8 @@ double Lymphocyte::get_CyclingParams(void) {
 double Lymphocyte::get_InitValues() {
 std::vector<double>  initialV0;
 
- ifstream indataV; // indata
+ifstream indataV; // indata
+
 string filename3 =Simulation::input_dir_+"Day_1_3decoratings_22.txt";
 indataV.open(filename3); // opens the file
   //  indataV.open("Day_1_3decoratings.txt"); // opens the file
@@ -663,7 +664,7 @@ case InterCellSignal::LYMPHOCYTE_P1_1:
 case InterCellSignal::LYMPHOCYTE_P9_3:
        return  Protein_array_[35];
       case InterCellSignal::REMEMBER_DIVISION:
-            return  Protein_array_[9]; 
+            return  Protein_array_[36]; 
       case InterCellSignal::LYMPHOCYTE_mRNA1:
             return mRNA_array_[0];
       case InterCellSignal::LYMPHOCYTE_mRNA2:
@@ -683,59 +684,59 @@ case InterCellSignal::LYMPHOCYTE_P9_3:
     case InterCellSignal::LYMPHOCYTE_mRNA9:
              return  mRNA_array_[8];
 case InterCellSignal::LYMPHOCYTE_mRNA1_1:
-       return  Protein_array_[9];
+       return  mRNA_array_[9];
     case InterCellSignal::LYMPHOCYTE_mRNA2_1:
-       return  Protein_array_[10];
+       return  mRNA_array_[10];
     case InterCellSignal::LYMPHOCYTE_mRNA3_1:
-       return  Protein_array_[11];
+       return  mRNA_array_[11];
     case InterCellSignal::LYMPHOCYTE_mRNA4_1:
-       return  Protein_array_[12];
+       return  mRNA_array_[12];
     case InterCellSignal::LYMPHOCYTE_mRNA5_1:
-       return  Protein_array_[13];
+       return  mRNA_array_[13];
     case InterCellSignal::LYMPHOCYTE_mRNA6_1:
-       return  Protein_array_[14];
+       return  mRNA_array_[14];
    case InterCellSignal::LYMPHOCYTE_mRNA7_1:
-        return  Protein_array_[15];
+        return  mRNA_array_[15];
    case InterCellSignal::LYMPHOCYTE_mRNA8_1:
-       return  Protein_array_[16];
+       return  mRNA_array_[16];
     case InterCellSignal::LYMPHOCYTE_mRNA9_1:
-       return  Protein_array_[17];
+       return  mRNA_array_[17];
     case InterCellSignal::LYMPHOCYTE_mRNA1_2:
-       return  Protein_array_[18];
+       return  mRNA_array_[18];
     case InterCellSignal::LYMPHOCYTE_mRNA2_2:
-       return  Protein_array_[19];
+       return  mRNA_array_[19];
     case InterCellSignal::LYMPHOCYTE_mRNA3_2:
-       return  Protein_array_[20];
+       return  mRNA_array_[20];
     case InterCellSignal::LYMPHOCYTE_mRNA4_2:
-       return  Protein_array_[21];
+       return  mRNA_array_[21];
     case InterCellSignal::LYMPHOCYTE_mRNA5_2:
-       return  Protein_array_[22];
+       return  mRNA_array_[22];
     case InterCellSignal::LYMPHOCYTE_mRNA6_2:
-       return  Protein_array_[23];
+       return  mRNA_array_[23];
     case InterCellSignal::LYMPHOCYTE_mRNA7_2:
-       return  Protein_array_[24];
+       return  mRNA_array_[24];
     case InterCellSignal::LYMPHOCYTE_mRNA8_2:
-       return  Protein_array_[25];
+       return  mRNA_array_[25];
     case InterCellSignal::LYMPHOCYTE_mRNA9_2:
-       return  Protein_array_[26];
+       return  mRNA_array_[26];
     case InterCellSignal::LYMPHOCYTE_mRNA1_3:
-       return  Protein_array_[27];
+       return  mRNA_array_[27];
     case InterCellSignal::LYMPHOCYTE_mRNA2_3:
-       return  Protein_array_[28];
+       return  mRNA_array_[28];
     case InterCellSignal::LYMPHOCYTE_mRNA3_3:
-       return  Protein_array_[29];
+       return  mRNA_array_[29];
     case InterCellSignal::LYMPHOCYTE_mRNA4_3:
-       return  Protein_array_[30];
+       return  mRNA_array_[30];
     case InterCellSignal::LYMPHOCYTE_mRNA5_3:
-       return  Protein_array_[31];
+       return  mRNA_array_[31];
     case InterCellSignal::LYMPHOCYTE_mRNA6_3:
-       return  Protein_array_[32];
+       return  mRNA_array_[32];
     case InterCellSignal::LYMPHOCYTE_mRNA7_3:
-       return  Protein_array_[33];
+       return  mRNA_array_[33];
     case InterCellSignal::LYMPHOCYTE_mRNA8_3:
-       return  Protein_array_[34];
+       return  mRNA_array_[34];
 case InterCellSignal::LYMPHOCYTE_mRNA9_3:
-       return  Protein_array_[35];
+       return  mRNA_array_[35];
 
       case InterCellSignal::LYMPHOCYTE_CONTACT:
 	        return internal_state_[TCC];
@@ -760,7 +761,7 @@ bool Lymphocyte::isCycling() const {
 bool Lymphocyte::isDividing() const { 
 
     if (Protein_array_[(Number_Of_Genes_)] > 0.){
-        return (Protein_array_[1] >= 0.45 &&
+        return (Protein_array_[1] >= 0.4 &&
 	    size_.may_divide());}
     
        
@@ -771,7 +772,7 @@ bool Lymphocyte::isDividing() const {
 
 bool Lymphocyte::isDying() const {
     // <TODO> Should the cell die now ? </TODO>
-return (cell_type_ == LYMPHOCYTE && (Protein_array_[2] >= 0.9)) ||(cell_type_ == APC && (15.0*this->pos_x()) < Simulation::sim_time() )  ;}
+return (cell_type_ == LYMPHOCYTE && (Protein_array_[2] >= 0.75)) ||(cell_type_ == APC && ((12.0*24.+ this->pos_x()*2. + this->pos_y()*2. + this->pos_z()/2.) < Simulation::sim_time() ))  ;}
 
 void Lymphocyte::Get_Sigma( double *Sigma_i ,double * P, double APC_c, double Duration_APC, double Tcc, double duration_TCC,const double x,  bool AcceptNegative ) {
 
@@ -783,33 +784,35 @@ int remember_j[Number_Of_Genes_]={};
 double interIJ;
 double initval_i[Number_Of_Genes_]={}; //init
  for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
-           initval_i[i] += GenesInteractionsMatrix_[i + Number_Of_Genes_ * i];
+//           initval_i[i] += GenesInteractionsMatrix_[i + Number_Of_Genes_ * i];
+
+
+//APC signal activates gene 1 
 if ( i == 0){
-   if (Protein_array_[(Number_Of_Genes_)] < 1.) {if (Duration_APC >= 10.) {initval_i[i] += x; }
-          else  {initval_i[i] -= x/2; }}
+//   if (Protein_array_[(Number_Of_Genes_)] < 1.) {
+   if (Duration_APC >= 10. && Protein_array_[(Number_Of_Genes_)] < 1.) {initval_i[i] += 1.5*x; }
+  //        else  {initval_i[i] -= x/2; }}
    else {initval_i[i] -= x/2.; }
  }
 
+// TCC activates gene3
  else if (i == 2){
    if (Tcc >= 1. ){
-     initval_i[i] += x;
+     initval_i[i] += 1.5*x;
 }
   else {initval_i[i] -= x/2.; }
 
 }
 
+ else{
+initval_i[i] -= x/2.; }
+
  for (u_int32_t j = 0; j < Number_Of_Genes_; j++) {
    interIJ = GenesInteractionsMatrix_[i + Number_Of_Genes_ * j]; // J acts on I
-    if(interIJ != 0.){
-        count_ij[i] += 1;
-            remember_j[i] += j;}
-    if (((interIJ > 0.)||AcceptNegative)&&(j!=i)) {
-            initval_i[i] += Parr[j] * interIJ;
+    if (((interIJ > 0.)||AcceptNegative)) {      
+      initval_i[i] += Parr[j] * interIJ;
       }
  }
- if ((count_ij[i]==1) &&(initval_i[remember_j[i]] < -0.)){
- initval_i[i] += initval_i[remember_j[i]]* GenesInteractionsMatrix_[i + Number_Of_Genes_ * remember_j[i]];}
-
 }
  for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
 Sigma_i[i] = (1. / (1. + exp(-initval_i[i])));
@@ -818,19 +821,20 @@ Sigma_i[i] = (1. / (1. + exp(-initval_i[i])));
 
 
 void Lymphocyte::Intracellular_ExactEvol(double thetime, double * P, double * M, double * S1) {
-    double d0 = KinParam_[0]; // mRNA degradation rates * normal genes
-    double d1 = KinParam_[1]; //protein degradation rates * normal genes (gene2)
-    double d01 = KinParam_[5]; // mRNA degradation rates * gene1
-    double d11 = KinParam_[6]; //protein degradation rates * gene1
+        // Default degradation rates
+            double d0 = KinParam_[0];  // mRNA degradation rates
+            double D2 = KinParam_[1];  //protein degradation rates
 
-    
-    double d13 = KinParam_[7]; //protein degradation rates * gene3
-    //**********  change to test 4genes model
-    double d14 = KinParam_[8]; //protein degradation rates * gene4
-    double D7 = KinParam_[9];  //protein degradation rates * gene7
-    double D8 = KinParam_[10]; //protein degradation rates * gene8
-    double D9 = KinParam_[12]; //protein degradation rates * gene9
-    double D_sub  = KinParam_[11];  //protein degradation rates * gene5,6
+            //double d01 = KinParam_[5];  // mRNA degradation rates * gene1
+            double D1 = KinParam_[5];  //protein degradation rates * gene1
+
+            double D3 = KinParam_[6];
+            double D4 = KinParam_[7];  //protein degradation rates * gene4
+            double D7 = KinParam_[8];  //protein degradation rates * gene7
+            double D8 = KinParam_[9];
+            double D5 = KinParam_[10];
+            double D6 = KinParam_[11];
+            double D9 = KinParam_[12]; //protein degradation rates * gene9
     double Marr[Number_Of_Genes_];
     double Parr[Number_Of_Genes_];
 
@@ -839,42 +843,50 @@ void Lymphocyte::Intracellular_ExactEvol(double thetime, double * P, double * M,
     // New values:
     for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
       
-      if ( i%9 == 0 ){
-        M[i] = Marr[i] * exp(-thetime * d01);
-        P[i] = ((S1[i] / (d01 - d11)) * Marr[i]*(exp(-thetime * d11) - exp(-thetime * d01)) + Parr[i] * exp(-thetime * d11));
-      }
-     else if ( i%9 == 3 ){
+      if (i == 0 ){ //i%9 == 0 ){
         M[i] = Marr[i] * exp(-thetime * d0);
-        P[i] = ((S1[i] / (d0 - d14)) * Marr[i]*(exp(-thetime * d14) - exp(-thetime * d0))+ Parr[i] * exp(-thetime * d14));
+        P[i] = ((S1[i] / (d0 - D1)) * Marr[i]*(exp(-thetime * D1) - exp(-thetime * d0)) + Parr[i] * exp(-thetime * D1));
       }
-      else if (i%9 == 6){
+     else if ( i == 3 ){
+        M[i] = Marr[i] * exp(-thetime * d0);
+        P[i] = ((S1[i] / (d0 - D4)) * Marr[i]*(exp(-thetime * D4) - exp(-thetime * d0))+ Parr[i] * exp(-thetime * D4));
+      }
+      else if (i == 6){
         M[i] = Marr[i] * exp(-thetime * d0);
         P[i] = ((S1[i] /(d0 - D7)) * Marr[i]*(exp(-thetime * D7) - exp(-thetime * d0))+ Parr[i] * exp(-thetime * D7));
       }
       
-     else if (i%9 == 7){
+     else if (i == 7){
         M[i] = Marr[i] * exp(-thetime * d0);
         P[i] = ((S1[i] /(d0 - D8)) * Marr[i]*(exp(-thetime * D8) - exp(-thetime * d0)) + Parr[i] * exp(-thetime * D8));
       }
-     else if (i%9 == 8){
+     else if (i == 8){
         M[i] = Marr[i] * exp(-thetime * d0);
         P[i] = ((S1[i] /(d0 - D9)) * Marr[i]*(exp(-thetime * D9) - exp(-thetime * d0)) + Parr[i] * exp(-thetime * D9));
       }
- else if ((i%9 == 4) || (i%9 == 5) ){
+ else if (i == 4 ){
         M[i] = Marr[i] * exp(-thetime * d0);
-        P[i] = ((S1[i] /(d0 - D_sub)) * Marr[i]*(exp(-thetime * D_sub) - exp(-thetime * d0)) + Parr[i] * exp(-thetime *  D_sub));
+        P[i] = ((S1[i] /(d0 - D5)) * Marr[i]*(exp(-thetime * D5) - exp(-thetime * d0)) + Parr[i] * exp(-thetime *  D5));
       }
- else if (i%9 == 2 ){
+else if  (i == 5) {
         M[i] = Marr[i] * exp(-thetime * d0);
-        P[i] = ((S1[i]/(d0 - d13)) * Marr[i]*(exp(-thetime * d13) - exp(-thetime * d0)) + Parr[i] * exp(-thetime *  d13));
+        P[i] = ((S1[i] /(d0 - D6)) * Marr[i]*(exp(-thetime * D6) - exp(-thetime * d0)) + Parr[i] * exp(-thetime *  D6));
+      }
+ else if (i == 2 ){
+        M[i] = Marr[i] * exp(-thetime * d0);
+        P[i] = ((S1[i]/(d0 - D3)) * Marr[i]*(exp(-thetime * D3) - exp(-thetime * d0)) + Parr[i] * exp(-thetime *  D3));
       }
 
-    else{
+     else if (i == 1 ){
         M[i] = Marr[i] * exp(-thetime * d0);
-        P[i] = ((S1[i] / (d0 - d1)) * Marr[i]*(exp(-thetime * d1) - exp(-thetime * d0))	+ Parr[i] * exp(-thetime * d1));}
-    }
+        P[i] = ((S1[i] / (d0 - D2)) * Marr[i]*(exp(-thetime * D2) - exp(-thetime * d0))	+ Parr[i] * exp(-thetime * D2));}
+    
+else {
+        M[i] = Marr[i] * exp(-thetime * d0);
+        P[i] = ((S1[i] / (d0 - D1)) * Marr[i]*(exp(-thetime * D1) - exp(-thetime * d0)) + Parr[i] * exp(-thetime * D1));
 }
-
+}
+}
 /*
 void Lymphocyte::UpdateMitoticStatus() {
     // Once a cell enters the mitotic state, it remains mitotic until it
@@ -935,9 +947,9 @@ Coordinates<double> Lymphocyte::MotileDisplacement(const double& dt) {
    }
    double sigma_t;
    if ( contact_APC ){
-     if (Protein_array_[9] < 1.) {
-      sigma_t = 0.09;}
-     else    sigma_t = 3.;
+     if (Protein_array_[Number_Of_Genes_] < 1.) {
+      sigma_t = 0.02;}
+     else    sigma_t = 5.;
 
 //sigma_t = 0.1;
     }
@@ -945,7 +957,7 @@ Coordinates<double> Lymphocyte::MotileDisplacement(const double& dt) {
     sigma_t = 0.8;
     }
  else {
- sigma_t = 3.;
+ sigma_t = 5.;
      }
   Coordinates<double> displ { sqrt(dt)*sigma_t*Alea::gaussian_random(),
                               sqrt(dt)*sigma_t*Alea::gaussian_random(),
@@ -957,9 +969,9 @@ Coordinates<double> Lymphocyte::MotileDisplacement(const double& dt) {
 
 
 void Lymphocyte::ODE_update(const double& dt){
-   
-   
-    double t = 0., t1 = dt;
+
+    
+double t = 0., t1 = dt;
 
    switch (cell_type_) {
         case LYMPHOCYTE:
@@ -977,7 +989,7 @@ std::vector<Cell*> neighb = neighbours();
   auto cell_it = neighb.begin();
   bool contact_E = false;
   while ( cell_it != neighb.end() ) {
-    if ( (*cell_it)->cell_type() == LYMPHOCYTE && (Duration_APC > 0. && Protein_array_[6] >= 0.03 && Protein_array_[7] < 0.03) ) {
+    if ( (*cell_it)->cell_type() == LYMPHOCYTE && (Duration_APC > 0. && Protein_array_[7] < 0.02 && Protein_array_[6] >= 0.01)) {
 
  contact_E = true;
     break;
@@ -1003,17 +1015,18 @@ neighb.clear();
             double a2 = KinParam_[4]; 
             // Default degradation rates
             double d0 = KinParam_[0];  // mRNA degradation rates
-            double d1 = KinParam_[1];  //protein degradation rates
+            double D2 = KinParam_[1];  //protein degradation rates
 	    
-            double d01 = KinParam_[5];  // mRNA degradation rates * gene1
-            double d11 = KinParam_[6];  //protein degradation rates * gene1
+            //double d01 = KinParam_[5];  // mRNA degradation rates * gene1
+            double D1 = KinParam_[5];  //protein degradation rates * gene1
 	    
-            double d13 = KinParam_[7]; 
+            double D3 = KinParam_[6]; 
 	    //******test  model 4genes
-	        double d14 = KinParam_[8];  //protein degradation rates * gene4
-	        double D7 = KinParam_[9];  //protein degradation rates * gene7,8* cell
-            double D8 = KinParam_[10];
-            double D_sub = KinParam_[11];
+	        double D4 = KinParam_[7];  //protein degradation rates * gene4
+	        double D7 = KinParam_[8];  //protein degradation rates * gene7
+            double D8 = KinParam_[9];
+            double D5 = KinParam_[10];
+            double D6 = KinParam_[11];
             double D9 = KinParam_[12]; //protein degradation rates * gene9
             const double K0 = a0*d0;
             const double K1 = a1*d0;
@@ -1045,22 +1058,26 @@ double *S1 = new double[Number_Of_Genes_]; //init
 	  }
 
 for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
-          if ( i%9 == 0){
-        S1[i] = d0 * d11 * a2 / K1;}
-          else  if  ( i%9 == 3){
-            S1[i] = d0 * d14 * a2 / K1;}
-          else if ( i%9 == 6){
+          if ( i == 0){
+        S1[i] = d0 * D1 * a2 / K1;}
+          else  if  ( i == 3){
+            S1[i] = d0 * D4 * a2 / K1;}
+          else if ( i == 6){
             S1[i] = d0 * D7 * a2 / K1;}
-  else if ( i%9 == 7){
+  else if ( i == 7){
             S1[i] = d0 * D8 * a2 / K1;}
- else if ( i%9 == 8){
+ else if ( i == 8){
             S1[i] = d0 * D9 * a2 / K1;}
-  else if ( (i%9 == 4)||(i%9 == 5)){
-            S1[i] =d0 * D_sub * a2 / K1;}
-  else if ( i%9==2 ){
-            S1[i] =d0 * d13 * a2 / K1;}    
+  else if ( i == 4){
+            S1[i] =d0 * D5 * a2 / K1;}
+  else if (i == 5){
+            S1[i] =d0 * D6 * a2 / K1;}
+  else if ( i==2 ){
+            S1[i] =d0 * D3 * a2 / K1;}
+else if ( i==1 ){
+            S1[i] =d0 * D2 * a2 / K1;}     
 else {
-            S1[i] =d0 * d1 * a2 / K1;}
+            S1[i] =d0 * D1 * a2 / K1;}
  }
             while (Time_NextJump_ < t1){
 
@@ -1086,38 +1103,46 @@ else {
                 }
 
                 // ----------------- Calculate Kon & Tau ----------
-double thetime = log(d0 / d1) / (d0 - d1);
- double thetime1 = log(d0 / d11) / (d0 - d11);
- double thetime4 = log(d0 / d14) / (d0 - d14);
+double thetime = log(d0 / D2) / (d0 - D2);
+ double thetime1 = log(d0 / D1) / (d0 - D1);
+ double thetime4 = log(d0 / D4) / (d0 - D4);
  double thetime7 = log(d0 / D7) / (d0 - D7);
  double thetime8 = log(d0 / D8) / (d0 - D8);
  double thetime9 = log(d0 / D9) / (d0 - D9);
- double thetime_sub = log(d0 / D_sub) / (d0 - D_sub);
- double thetime3 = log(d0 / d13) / (d0 - d13);
+ double thetime5 = log(d0 / D5) / (d0 - D5);
+ double thetime6 = log(d0 / D6) / (d0 - D6);
+ double thetime3 = log(d0 / D3) / (d0 - D3);
                 for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
-		    if ( i%9 == 0){
-		   PPmax[i] = Protein_array_[i] + (S1[i] / (d01 - d11)) * mRNA_array_[i]*(exp(-thetime1 * d11) - exp(-thetime1 * d01));
+		    if ( i == 0){
+		   PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - D1)) * mRNA_array_[i]*(exp(-thetime1 * D1) - exp(-thetime1 * d0));
 		  	  }//////gene1
-		   else if ( i%9 == 3){
-		   PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - d14)) * mRNA_array_[i]*(exp(-thetime4 * d14) - exp(-thetime4 * d0));
+		   else if ( i == 3){
+		   PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - D4)) * mRNA_array_[i]*(exp(-thetime4 * D4) - exp(-thetime4 * d0));
 		  	  }//////gene4
-		     else if (i%9 == 6){
+		     else if (i == 6){
 		   PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D7)) * mRNA_array_[i]*(exp(-thetime7 * D7) - exp(-thetime7 * d0));
 		  	  }
-             else if (i%9 == 7){
+             else if (i == 7){
                    PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D8)) * mRNA_array_[i]*(exp(-thetime8 * D8) - exp(-thetime8 * d0));         
                }
-             else if (i%9 == 8){
+             else if (i == 8){
                    PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D9)) * mRNA_array_[i]*(exp(-thetime9 * D9) - exp(-thetime9 * d0));
                }
-            else if ((i%9 == 4) || (i%9 == 5)){
-                   PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D_sub)) * mRNA_array_[i]*(exp(-thetime_sub * D_sub) - exp(-thetime_sub * d0));
+            else if (i == 4){
+                   PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D5)) * mRNA_array_[i]*(exp(-thetime5 * D5) - exp(-thetime5 * d0));
                           }
-  else if (i%9 ==2 ){
-                   PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - d13)) * mRNA_array_[i]*(exp(-thetime3 * d13) - exp(-thetime3 * d0));
+ else if  (i == 5){
+                   PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D6)) * mRNA_array_[i]*(exp(-thetime6 * D6) - exp(-thetime6 * d0));
+                          }
+  else if (i ==2 ){
+                   PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D3)) * mRNA_array_[i]*(exp(-thetime3 * D3) - exp(-thetime3 * d0));
        }
-		   else{
-		       PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - d1)) * mRNA_array_[i]*(exp(-thetime * d1) - exp(-thetime * d0));
+		   else if (i ==1 ){
+		       PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - D2)) * mRNA_array_[i]*(exp(-thetime * D2) - exp(-thetime * d0));
+} 
+else {
+           PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - D1)) * mRNA_array_[i]*(exp(-thetime1 * D1) - exp(-thetime1 * d0));
+
 }
 }
 
