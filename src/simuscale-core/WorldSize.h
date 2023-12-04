@@ -49,7 +49,9 @@ class WorldSize {
                                const Coordinates<double>& pos,
                                double radius);
 
-  static Coordinates<double> RandomPos(double radius, double floor_z);
+  static Coordinates<double> RandomPos(double radius, double floor_z, double theta, double cos_phi, double sin_phi);
+
+static Coordinates<double> RandomPos_APC (double radius, double floor_z,double theta, double cos_phi, double sin_phi);
 
  protected :
   // ==========================================================================
