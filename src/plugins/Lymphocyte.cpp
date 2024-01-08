@@ -779,11 +779,12 @@ void Lymphocyte::Get_Sigma( double *Sigma_i ,double * P, double APC_c, double Du
 double Parr[Number_Of_Genes_];
  memcpy(Parr, P, Number_Of_Genes_ * sizeof (*P));
 
-int count_ij[Number_Of_Genes_]={}; // count interaction
-int remember_j[Number_Of_Genes_]={};
-double interIJ;
-double initval_i[Number_Of_Genes_]={}; //init
- for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
+ double interIJ;
+ double initval_i[Number_Of_Genes_];
+
+
+  for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
+	     initval_i[i] = 0.0;
 //           initval_i[i] += GenesInteractionsMatrix_[i + Number_Of_Genes_ * i];
 
 

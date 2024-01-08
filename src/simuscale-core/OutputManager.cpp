@@ -33,7 +33,6 @@
 
 #include "params/NicheParams.h"
 
-#include "params/ParamFileReader.h"
 #include "Simulation.h"
 #include "WorldSize.h"
 
@@ -62,7 +61,7 @@ map<OutputManager::Output, const string> OutputManager::output_file_names_ = {
 //  {SIGNALS, "signals.txt"},
  // {STATS, "stats.txt"},
 //#endif
-{TRAJECTORY,Simulation::output_dir_+"trajectory.txt"},
+{TRAJECTORY, "trajectory.txt"},
 };
 
 const string OutputManager::normalization_file_name_ = "normalization.txt";

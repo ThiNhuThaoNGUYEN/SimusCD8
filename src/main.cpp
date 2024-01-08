@@ -40,7 +40,6 @@
 #include "params.h"
 #include "Simulation.h"
 #include "Alea.h"
-#include <omp.h>
 
 using std::string;
 using std::cout;

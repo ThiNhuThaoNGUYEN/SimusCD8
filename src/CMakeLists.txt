@@ -24,7 +24,7 @@ include_directories("." "simuscale-core")
 #set(PLUGINS Cell_Spiky Cell_SyncClock  Lymphocyte )
 set( PLUGINS Lymphocyte )
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(PLUGIN_DIR plugins)
 foreach (PLUGIN IN LISTS PLUGINS)

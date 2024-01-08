@@ -22,22 +22,6 @@ include(GNUInstallDirs)
 # set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 find_package(GSL REQUIRED)
-
-#parallel computing
-OPTION (USE_OpenMP "Use OpenMP" ON)
-IF(USE_OpenMP)
-    FIND_PACKAGE(OpenMP)
-IF(OPENMP_FOUND)
-    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-ENDIF()
-ENDIF()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp")
-
-#find_package(MPI REQUIRED)
-#message(STATUS "Run: ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS} EXECUTABLE ${MPIEXEC_POSTFLAGS} ARGS")
-
 # ============================================================================
 # Tell cmake where to build binary files.
 # By GNU standards "executable programs that users can run" should go in
@@ -52,7 +36,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 # Set compilation flags (general and then build-type specific)
 # ============================================================================
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -Wextra -O0")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -O0 -fopenmp")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -O0")
 set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_C_FLAGS_DEBUG} -pg" CACHE STRING
     "Flags used for profiling"
     FORCE )
