@@ -65,7 +65,6 @@ isMitotic_(model.isMitotic_) {
     memcpy(KinParam_, model.KinParam_, Number_Of_Parameters_ * sizeof (*KinParam_));
     memcpy(GenesInteractionsMatrix_, model.GenesInteractionsMatrix_, Number_Of_Genes_ * Number_Of_Genes_ * sizeof (*GenesInteractionsMatrix_));
 
-//   get_CyclingParams();
 }
 
 /**
@@ -85,7 +84,6 @@ doubling_time) {
      phylogeny_t_.push_back(Simulation::sim_time());
 
 
-  //  get_CyclingParams();
     get_GeneParams();
     get_InitValues();
     
@@ -106,7 +104,7 @@ doubling_time) {
     }
 
 
-//there are n T cells at day  0
+//if there are n T-cells at day  0
 
 if (this->id() <= Number_Tcells) { //id =1,..
 
@@ -124,7 +122,7 @@ if( j < Number_Of_Genes_ ){
         ThinningParam_array_[j] = thenorm * Alea::random();
      }
 } 
-else{
+ else{ 
 
     for (u_int32_t j = 0; j < Number_Of_Genes_; j++) {
         mRNA_array_[j] = 0.;
@@ -146,9 +144,7 @@ delete [] initialV_;
     internal_state_[APC_Encounters] = 0.;
     internal_state_[TCC] = 0.;
     
-    // internal_state_[CY_X] = mitotic_threshold_*Alea::random();
-    //internal_state_[CD_DEATH] = death_threshold_*Alea::random();
-}
+  }
 
 /**
  * Restore an object that was backed-up in backup_file
@@ -186,20 +182,15 @@ void Lymphocyte::InternalUpdate(const double& dt) {
     //std::cout << "Internal update" << std::endl;
     // Update the intracellular state of the cell
 
-
-  if (cell_type_ != CellType::NICHE) {
+   if (cell_type_ != CellType::NICHE) {
     ODE_update(dt);
       
     }    // If the cell is dying, don't take any further actions
    if (isDying()) return;
 
-
-  //  UpdateCyclingStatus();
-
     // Make the cell grow if it's cycling (and not dying)
-      Grow(dt);
-      // UpdateMitoticStatus();
-}
+    Grow(dt);
+   }
 
 void Lymphocyte::UpdatePhylogeny(vector<int> phy_id, vector<double> phy_t, int sz) {
     phylogeny_id_.insert(phylogeny_id_.begin(), phy_id.begin(), phy_id.end());
@@ -249,9 +240,6 @@ int num_division = 0;
 
 Cell* Lymphocyte::Divide() {
 
- // Reset mitotic status
-  //  isMitotic_ = false;
-  
     // Create a copy of the cell with no mechanical forces nor chemical stimuli
     // applied to it
     Lymphocyte* newCell = new Lymphocyte(*this);
@@ -282,9 +270,10 @@ cout << "negative,**************************************** "  << K_p<< K_m << en
  K_p = 1.0 - (m / 100.)* Alea::gaussian_random_0_2();
  K_m = 1.0 - (a / 100.)* Alea::gaussian_random_0_2();
 
-//cout << "new "<< K_p<< K_m << endl;
-}
+ }
 
+ //partitioning of molecular content into daughter cells
+ 
     randomCell = Alea::random();
     if (randomCell < 0.5){
       
@@ -306,11 +295,10 @@ cout << "negative,**************************************** "  << K_p<< K_m << en
 
 
     
-    newCell->UpdatePhylogeny(phylogeny_id_, phylogeny_t_, phylogeny_id_.size());
-    
-    
+   newCell->UpdatePhylogeny(phylogeny_id_, phylogeny_t_, phylogeny_id_.size());
+
+   //records the ID of the proliferating cell
    
-    
     phylogeny_id_.push_back(this->id());
  
     phylogeny_t_.push_back(Simulation::sim_time());
@@ -391,12 +379,14 @@ string filename =Simulation::input_dir_+"kineticsparam.txt";
     }
 
     indatakin.close();
-    ////////////////////////////////////
+
     ifstream indataf; // indata is like cin
-//     indataf.open("GeneInteractionsMatrix_9G_initial.txt"); // opens the file   
-string filename2 =Simulation::input_dir_+"GeneInteractionsMatrix_3decoratings_9G.txt";
+    
+    string filename2 =Simulation::input_dir_+"GeneInteractionsMatrix_3decoratings_9G.txt";
+
     indataf.open(filename2); // opens the file  
-   if (!indataf) { // file couldn't be opened
+
+    if (!indataf) { // file couldn't be opened
         std::cerr << "Error: file GeneInteractionsMatrix.txt could not be opened" << std::endl;
         exit(1);
     }
@@ -441,48 +431,6 @@ string filename2 =Simulation::input_dir_+"GeneInteractionsMatrix_3decoratings_9G
     return 0;
 }
 
-/*
-double Lymphocyte::get_CyclingParams(void) {
-    vector<double> cyclingparam;
-
-    ////////////////////////////////////
-    ifstream indatakin; // indata is like cin
-    indatakin.open("cyclingparam.txt"); // opens the file
-    if (!indatakin) { // file couldn't be opened
-        std::cerr << "Error: file cyclingparam.txt could not be opened" << std::endl;
-        exit(1);
-    }
-    int iter = 0;
-    std::string line;
-    std::getline(indatakin, line);
-    std::getline(indatakin, line);
-    std::istringstream iss(line);
-    double a;
-
-    while (iter < 6) {
-        if (!(iss >> a)) {
-            std::cerr << "Error: file cyclingparam.txt not readable - possible value missing" << std::endl;
-            break;
-        }// error
-        else {
-            cyclingparam.push_back(a);
-            iter = iter + 1;
-        }
-    }
-
-    indatakin.close();
-    mitotic_threshold_ = cyclingparam[0];
-    cycling_threshold_ = cyclingparam[1];
-    dividing_threshold_ = cyclingparam[2];
-    death_threshold_ = cyclingparam[3];
-    mitotic_threshold_P0_= cyclingparam[4];
-    k_survival = cyclingparam[5];
-
-
-    return 0;
-}
-*/
-
 
 
 double Lymphocyte::get_InitValues() {
@@ -491,20 +439,18 @@ std::vector<double>  initialV0;
 ifstream indataV; // indata
 
 string filename3 =Simulation::input_dir_+"Day_1_3decoratings_22.txt";
-indataV.open(filename3); // opens the file
-  //  indataV.open("Day_1_3decoratings.txt"); // opens the file
-// indataV.open("Day_1_22aout.txt"); // opens the file  
 
+ indataV.open(filename3); // opens the file
   if (!indataV) { // file couldn't be opened
         std::cerr << "Error: file initial values Day_1.txt could not be opened" << std::endl;
-initialV_ =new double[Number_Of_Genes_*(Number_Of_Genes_)];
-for (u_int32_t i = 0; i < Number_Tcells*(Number_Of_Genes_*2+2); i++){
+  initialV_ =new double[Number_Of_Genes_*(Number_Of_Genes_)];
+
+  for (u_int32_t i = 0; i < Number_Tcells*(Number_Of_Genes_*2+2); i++){
     initialV_[i]= 0.;
- indataV.close();
-    //cout<<initialV_[i]<<endl;
+    indataV.close();
     }
-//        exit(1);
-    }
+
+  }
     std::string line2;
     double val;
     int c = 0;
@@ -532,8 +478,7 @@ while (std::getline(indataV, line2)) {
     
     for (u_int32_t i = 0; i < Number_Tcells*(Number_Of_Genes_*2+2); i++){
     initialV_[i]=initialV0.at(i);
-    //cout<<initialV_[i]<<endl;
-    }
+     }
 
     return 0.0;
 }
@@ -657,11 +602,11 @@ case InterCellSignal::LYMPHOCYTE_P1_1:
        return  Protein_array_[31];
     case InterCellSignal::LYMPHOCYTE_P6_3:
        return  Protein_array_[32];
-    case InterCellSignal::LYMPHOCYTE_P7_3:
+      case InterCellSignal::LYMPHOCYTE_P7_3:
        return  Protein_array_[33];
-    case InterCellSignal::LYMPHOCYTE_P8_3:
+      case InterCellSignal::LYMPHOCYTE_P8_3:
        return  Protein_array_[34];
-case InterCellSignal::LYMPHOCYTE_P9_3:
+      case InterCellSignal::LYMPHOCYTE_P9_3:
        return  Protein_array_[35];
       case InterCellSignal::REMEMBER_DIVISION:
             return  Protein_array_[36]; 
@@ -673,7 +618,7 @@ case InterCellSignal::LYMPHOCYTE_P9_3:
 	        return  mRNA_array_[2];
       case InterCellSignal::LYMPHOCYTE_mRNA4:
          	return mRNA_array_[3];
-	  case InterCellSignal::LYMPHOCYTE_mRNA5:
+      case InterCellSignal::LYMPHOCYTE_mRNA5:
             return mRNA_array_[4];
       case InterCellSignal::LYMPHOCYTE_mRNA6:
             return mRNA_array_[5];   
@@ -681,82 +626,72 @@ case InterCellSignal::LYMPHOCYTE_P9_3:
             return  mRNA_array_[6];
       case InterCellSignal::LYMPHOCYTE_mRNA8:
              return  mRNA_array_[7]; 
-    case InterCellSignal::LYMPHOCYTE_mRNA9:
+      case InterCellSignal::LYMPHOCYTE_mRNA9:
              return  mRNA_array_[8];
-case InterCellSignal::LYMPHOCYTE_mRNA1_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA1_1:
        return  mRNA_array_[9];
-    case InterCellSignal::LYMPHOCYTE_mRNA2_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA2_1:
        return  mRNA_array_[10];
-    case InterCellSignal::LYMPHOCYTE_mRNA3_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA3_1:
        return  mRNA_array_[11];
-    case InterCellSignal::LYMPHOCYTE_mRNA4_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA4_1:
        return  mRNA_array_[12];
-    case InterCellSignal::LYMPHOCYTE_mRNA5_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA5_1:
        return  mRNA_array_[13];
-    case InterCellSignal::LYMPHOCYTE_mRNA6_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA6_1:
        return  mRNA_array_[14];
-   case InterCellSignal::LYMPHOCYTE_mRNA7_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA7_1:
         return  mRNA_array_[15];
-   case InterCellSignal::LYMPHOCYTE_mRNA8_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA8_1:
        return  mRNA_array_[16];
-    case InterCellSignal::LYMPHOCYTE_mRNA9_1:
+      case InterCellSignal::LYMPHOCYTE_mRNA9_1:
        return  mRNA_array_[17];
-    case InterCellSignal::LYMPHOCYTE_mRNA1_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA1_2:
        return  mRNA_array_[18];
-    case InterCellSignal::LYMPHOCYTE_mRNA2_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA2_2:
        return  mRNA_array_[19];
-    case InterCellSignal::LYMPHOCYTE_mRNA3_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA3_2:
        return  mRNA_array_[20];
-    case InterCellSignal::LYMPHOCYTE_mRNA4_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA4_2:
        return  mRNA_array_[21];
-    case InterCellSignal::LYMPHOCYTE_mRNA5_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA5_2:
        return  mRNA_array_[22];
-    case InterCellSignal::LYMPHOCYTE_mRNA6_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA6_2:
        return  mRNA_array_[23];
-    case InterCellSignal::LYMPHOCYTE_mRNA7_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA7_2:
        return  mRNA_array_[24];
-    case InterCellSignal::LYMPHOCYTE_mRNA8_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA8_2:
        return  mRNA_array_[25];
-    case InterCellSignal::LYMPHOCYTE_mRNA9_2:
+      case InterCellSignal::LYMPHOCYTE_mRNA9_2:
        return  mRNA_array_[26];
-    case InterCellSignal::LYMPHOCYTE_mRNA1_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA1_3:
        return  mRNA_array_[27];
-    case InterCellSignal::LYMPHOCYTE_mRNA2_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA2_3:
        return  mRNA_array_[28];
-    case InterCellSignal::LYMPHOCYTE_mRNA3_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA3_3:
        return  mRNA_array_[29];
-    case InterCellSignal::LYMPHOCYTE_mRNA4_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA4_3:
        return  mRNA_array_[30];
-    case InterCellSignal::LYMPHOCYTE_mRNA5_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA5_3:
        return  mRNA_array_[31];
-    case InterCellSignal::LYMPHOCYTE_mRNA6_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA6_3:
        return  mRNA_array_[32];
-    case InterCellSignal::LYMPHOCYTE_mRNA7_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA7_3:
        return  mRNA_array_[33];
-    case InterCellSignal::LYMPHOCYTE_mRNA8_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA8_3:
        return  mRNA_array_[34];
-case InterCellSignal::LYMPHOCYTE_mRNA9_3:
+      case InterCellSignal::LYMPHOCYTE_mRNA9_3:
        return  mRNA_array_[35];
 
       case InterCellSignal::LYMPHOCYTE_CONTACT:
 	        return internal_state_[TCC];
          
        default:
-          //  printf("%s:%d: error: case %d not implemented.\n", __FILE__, __LINE__,
-	  //        ((int) getInSignal(signal)));
-	  // exit(EXIT_FAILURE);
-          return 0.0;  // if signal is unknown, return 0.0, not a failure
+      return 0.0;  // if signal is unknown, return 0.0, not a failure
     }
 }
 
 
-
-/*
-bool Lymphocyte::isCycling() const {
-    // <TODO> Is the cell currently cycling ? </TODO>
-    return isCycling_;
-}
-*/
 
 bool Lymphocyte::isDividing() const { 
 
@@ -785,14 +720,11 @@ double Parr[Number_Of_Genes_];
 
   for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
 	     initval_i[i] = 0.0;
-//           initval_i[i] += GenesInteractionsMatrix_[i + Number_Of_Genes_ * i];
-
 
 //APC signal activates gene 1 
 if ( i == 0){
-//   if (Protein_array_[(Number_Of_Genes_)] < 1.) {
+
    if (Duration_APC >= 10. && Protein_array_[(Number_Of_Genes_)] < 1.) {initval_i[i] += 1.5*x; }
-  //        else  {initval_i[i] -= x/2; }}
    else {initval_i[i] -= x/2.; }
  }
 
@@ -805,7 +737,7 @@ if ( i == 0){
 
 }
 
- else{
+ else{ // Basal activity for other genes
 initval_i[i] -= x/2.; }
 
  for (u_int32_t j = 0; j < Number_Of_Genes_; j++) {
@@ -826,7 +758,7 @@ void Lymphocyte::Intracellular_ExactEvol(double thetime, double * P, double * M,
             double d0 = KinParam_[0];  // mRNA degradation rates
             double D2 = KinParam_[1];  //protein degradation rates
 
-            //double d01 = KinParam_[5];  // mRNA degradation rates * gene1
+
             double D1 = KinParam_[5];  //protein degradation rates * gene1
 
             double D3 = KinParam_[6];
@@ -844,7 +776,7 @@ void Lymphocyte::Intracellular_ExactEvol(double thetime, double * P, double * M,
     // New values:
     for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
       
-      if (i == 0 ){ //i%9 == 0 ){
+      if (i == 0 ){ 
         M[i] = Marr[i] * exp(-thetime * d0);
         P[i] = ((S1[i] / (d0 - D1)) * Marr[i]*(exp(-thetime * D1) - exp(-thetime * d0)) + Parr[i] * exp(-thetime * D1));
       }
@@ -929,6 +861,7 @@ bool Lymphocyte::StartCycling() {
 }
 */
 
+// movement of T cell
 Coordinates<double> Lymphocyte::MotileDisplacement(const double& dt) {
   
   std::vector<Cell*> neighb = neighbours();
@@ -936,10 +869,12 @@ Coordinates<double> Lymphocyte::MotileDisplacement(const double& dt) {
   bool contact_APC = false;
   bool contact_T = false;
    while ( cell_it != neighb.end() ) {
+     //if T cell contacts APC
     if ( (*cell_it)->cell_type() == APC ) {
       contact_APC = true;
       break;
     }
+    //if T cell contacts other T cell
     if ( (*cell_it)->cell_type() == LYMPHOCYTE ) {
       contact_T = true;
       break;
@@ -952,7 +887,6 @@ Coordinates<double> Lymphocyte::MotileDisplacement(const double& dt) {
       sigma_t = 0.02;}
      else    sigma_t = 5.;
 
-//sigma_t = 0.1;
     }
    else if ( contact_T ) {
     sigma_t = 0.8;
@@ -997,17 +931,17 @@ std::vector<Cell*> neighb = neighbours();
     }
     cell_it++;
    }
+  // have TCC signaling because it contacted the effector cell
    if ( contact_E ) {
      internal_state_[TCC] = getInSignal(InterCellSignal::LYMPHOCYTE_CONTACT);
     } 
 	     
-
 neighb.clear();
 
-	     if ( internal_state_[TCC]> 0.){
+	 if ( internal_state_[TCC]> 0.){
          Duration_TCC +=  dt;
-	     Remember_encounter_T +=  internal_state_[TCC];
-	     }
+	 Remember_encounter_T +=  internal_state_[TCC];
+	 }
 	       
             // Here: PDMP (intracellular signalling)*
             // Default bursting parameters
@@ -1368,3 +1302,8 @@ bool Lymphocyte::registered_ =
     return static_cast<Cell*> (new Lymphocyte(backup_file));
 }
 );
+
+
+
+
+

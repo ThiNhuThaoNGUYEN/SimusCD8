@@ -1,6 +1,0 @@
-
-# ignore simulation outputs
-*.bak
-alea_*
-**/first/*
-**/second/*
