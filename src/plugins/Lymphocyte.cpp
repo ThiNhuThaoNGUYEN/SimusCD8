@@ -442,7 +442,7 @@ string filename3 =Simulation::input_dir_+"Day_1_3decoratings_22.txt";
 
  indataV.open(filename3); // opens the file
   if (!indataV) { // file couldn't be opened
-        std::cerr << "Error: file initial values Day_1.txt could not be opened" << std::endl;
+      //  std::cerr << "Error: file Day_1.txt could not be opened" << std::endl;
   initialV_ =new double[Number_Of_Genes_*(Number_Of_Genes_)];
 
   for (u_int32_t i = 0; i < Number_Tcells*(Number_Of_Genes_*2+2); i++){
