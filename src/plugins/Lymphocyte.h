@@ -53,7 +53,7 @@ class Lymphocyte : public Cell {
 public:
 
     typedef enum {
-      APC_Encounters,TCC // DifferentiationState, 
+      APC_Encounters,TCC,T_Encounters // DifferentiationState, 
     } StateVariable;
 
     // =================================================================
@@ -131,7 +131,7 @@ protected:
 //    double Get_initval(int i, double * P, const double APC_c, const double Tcc, const double x, double initval0);
 //double KKon_bound_tau(int i, double * P, double * M, const double APC_c,const  double Tcc, const double S1);
 //double GetSigma_i(double initval);
- void Get_Sigma( double * sigma, double * P, const double APC_c, const double duration_APC, const double Tcc, const double duration_TCC, const double x, bool AcceptNegative);
+ void Get_Sigma( double * sigma, double * P, const double duration_APC, const double Tcc, const double x, bool AcceptNegative);
    // double GetSigma_i_new(int i, double initval);
     //int choice_i(std::vector<double> ProbaArray);
     void Intracellular_ExactEvol(double DeltaT, double * P, double * M, double * S1);
@@ -171,7 +171,7 @@ public:
 
 protected:
     // <TODO> Add your formalism-specific attributes here </TODO>
-    static constexpr uint32_t odesystemsize_ = 2;
+    static constexpr uint32_t odesystemsize_ = 3;
 
     static constexpr double sigma_  = 0.5;   // std of random movement
 
