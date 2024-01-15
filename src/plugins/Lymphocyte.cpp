@@ -684,7 +684,7 @@ case InterCellSignal::LYMPHOCYTE_P1_1:
        return  mRNA_array_[35];
 
       case InterCellSignal::LYMPHOCYTE_CONTACT:
-	        return internal_state_[TCC];
+	        return internal_state_[T_Encounters];//internal_state_[TCC];
          
        default:
       return 0.0;  // if signal is unknown, return 0.0, not a failure
@@ -709,7 +709,7 @@ bool Lymphocyte::isDying() const {
     // <TODO> Should the cell die now ? </TODO>
 return (cell_type_ == LYMPHOCYTE && (Protein_array_[2] >= 0.75)) ||(cell_type_ == APC && ((12.0*24.+ this->pos_x()*2. + this->pos_y()*2. + this->pos_z()/2.) < Simulation::sim_time() ))  ;}
 
-void Lymphocyte::Get_Sigma( double *Sigma_i ,double * P, double APC_c, double Duration_APC, double Tcc, double duration_TCC,const double x,  bool AcceptNegative ) {
+void Lymphocyte::Get_Sigma( double *Sigma_i ,double * P, double Duration_APC, double Tcc, const double x,  bool AcceptNegative ) {
 
 double Parr[Number_Of_Genes_];
  memcpy(Parr, P, Number_Of_Genes_ * sizeof (*P));
@@ -719,26 +719,22 @@ double Parr[Number_Of_Genes_];
 
 
   for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
-	     initval_i[i] = 0.0;
-
+// Basal activity for other genes 
+   initval_i[i] = -x/2.;
 //APC signal activates gene 1 
 if ( i == 0){
 
-   if (Duration_APC >= 10. && Protein_array_[(Number_Of_Genes_)] < 1.) {initval_i[i] += 1.5*x; }
-   else {initval_i[i] -= x/2.; }
+   if (Duration_APC >= 10. && Protein_array_[(Number_Of_Genes_)] < 1.) {initval_i[i] += 2.*x; }
+ 
  }
 
 // TCC activates gene3
  else if (i == 2){
-   if (Tcc >= 1. ){
-     initval_i[i] += 1.5*x;
-}
-  else {initval_i[i] -= x/2.; }
-
+   if (Tcc > 0. ){
+     initval_i[i] += 2.*x;
 }
 
- else{ // Basal activity for other genes
-initval_i[i] -= x/2.; }
+}
 
  for (u_int32_t j = 0; j < Number_Of_Genes_; j++) {
    interIJ = GenesInteractionsMatrix_[i + Number_Of_Genes_ * j]; // J acts on I
@@ -933,7 +929,8 @@ std::vector<Cell*> neighb = neighbours();
    }
   // have TCC signaling because it contacted the effector cell
    if ( contact_E ) {
-     internal_state_[TCC] = getInSignal(InterCellSignal::LYMPHOCYTE_CONTACT);
+     internal_state_[T_Encounters] = getInSignal(InterCellSignal::LYMPHOCYTE_CONTACT);
+     internal_state_[TCC] = std::min(getInSignal(InterCellSignal::LYMPHOCYTE_CONTACT),1.);
     } 
 	     
 neighb.clear();
@@ -1082,7 +1079,7 @@ else {
 }
 
 
-        Get_Sigma(Sigma, PPmax, internal_state_[APC_Encounters], Duration_APC, internal_state_[TCC], Duration_TCC, 10., false);
+        Get_Sigma(Sigma, PPmax, Duration_APC, internal_state_[TCC], 10., false);
         
         for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
 
@@ -1101,7 +1098,7 @@ else {
                 // ----------------- Construct probability array ----------
                 double Proba_no_jump = 1.;
 
-        Get_Sigma(Sigma, Protein_array_, internal_state_[APC_Encounters], Duration_APC, internal_state_[TCC], Duration_TCC, 10., true);
+        Get_Sigma(Sigma, Protein_array_, Duration_APC, internal_state_[TCC], 10., true);
         
         for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
     
