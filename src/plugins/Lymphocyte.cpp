@@ -941,6 +941,7 @@ neighb.clear();
 	 }
 	       
             // Here: PDMP (intracellular signalling)*
+            // from harissa/simulation/pdmp.py
             // Default bursting parameters
             double a0 = KinParam_[2]; //0;
             double a1 = KinParam_[3];/// change to normalize protein
@@ -948,12 +949,9 @@ neighb.clear();
             // Default degradation rates
             double d0 = KinParam_[0];  // mRNA degradation rates
             double D2 = KinParam_[1];  //protein degradation rates
-	    
-            //double d01 = KinParam_[5];  // mRNA degradation rates * gene1
             double D1 = KinParam_[5];  //protein degradation rates * gene1
 	    
             double D3 = KinParam_[6]; 
-	    //******test  model 4genes
 	        double D4 = KinParam_[7];  //protein degradation rates * gene4
 	        double D7 = KinParam_[8];  //protein degradation rates * gene7
             double D8 = KinParam_[9];
@@ -969,13 +967,12 @@ double *S1 = new double[Number_Of_Genes_]; //init
  for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
            S1[i] = 0.;
          }	   
+        
             const double r = a2;
-            
-	    
             double currentTime = 0.;
             double DeltaT = 0.;
             double *PPmax = new double[Number_Of_Genes_]; //init
-          double *ProbaArray = new double[Number_Of_Genes_+1]; //init
+            double *ProbaArray = new double[Number_Of_Genes_+1]; //init
 
     for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
 	       PPmax[i] = 0.;
@@ -1006,9 +1003,9 @@ for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
             S1[i] =d0 * D6 * a2 / K1;}
   else if ( i==2 ){
             S1[i] =d0 * D3 * a2 / K1;}
-else if ( i==1 ){
+  else if ( i==1 ){
             S1[i] =d0 * D2 * a2 / K1;}     
-else {
+  else {
             S1[i] =d0 * D1 * a2 / K1;}
  }
             while (Time_NextJump_ < t1){
@@ -1019,12 +1016,12 @@ else {
      Sigma[i] = 0.;
       }
  
- double Tau = 0.;
+    double Tau = 0.;
 // -------------------------- ------------------------------- ------------------
 //-- Advance until next jump, then solve ODE with new init values ---
 // -------------------------- ------------------------------- ------------------        
 	  
-                Intracellular_ExactEvol(std::max(Time_NextJump_ - currentTime, 0.), Protein_array_, mRNA_array_, S1);
+    Intracellular_ExactEvol(std::max(Time_NextJump_ - currentTime, 0.), Protein_array_, mRNA_array_, S1);
                
          if ((ithGene_ < Number_Of_Genes_)&&(ithGene_ >= 0)) {// i represents a real gene, it's a true jump
                 jump = true;
@@ -1063,23 +1060,23 @@ double thetime = log(d0 / D2) / (d0 - D2);
             else if (i == 4){
                    PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D5)) * mRNA_array_[i]*(exp(-thetime5 * D5) - exp(-thetime5 * d0));
                           }
- else if  (i == 5){
+            else if  (i == 5){
                    PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D6)) * mRNA_array_[i]*(exp(-thetime6 * D6) - exp(-thetime6 * d0));
                           }
-  else if (i ==2 ){
+            else if (i ==2 ){
                    PPmax[i] = Protein_array_[i] + (S1[i]/ (d0 - D3)) * mRNA_array_[i]*(exp(-thetime3 * D3) - exp(-thetime3 * d0));
        }
 		   else if (i ==1 ){
 		       PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - D2)) * mRNA_array_[i]*(exp(-thetime * D2) - exp(-thetime * d0));
 } 
-else {
+        else {
            PPmax[i] = Protein_array_[i] + (S1[i] / (d0 - D1)) * mRNA_array_[i]*(exp(-thetime1 * D1) - exp(-thetime1 * d0));
 
 }
 }
 
 
-        Get_Sigma(Sigma, PPmax, Duration_APC, internal_state_[TCC], 10., false);
+    Get_Sigma(Sigma, PPmax, Duration_APC, internal_state_[TCC], 10., false);
         
         for (u_int32_t i = 0; i < Number_Of_Genes_; i++) {
 
@@ -1092,11 +1089,11 @@ else {
         // ----------------- Calculate Delta = Next Jump Time ----------
 	
                 // Draw the waiting time before the next jump
-	        DeltaT = Alea::exponential_random(1./Tau);//*Number_Of_Genes_));
+	        DeltaT = Alea::exponential_random(1./Tau);
 		
         // ---------------------------------------- Select NEXT burst ------------------
                 // ----------------- Construct probability array ----------
-                double Proba_no_jump = 1.;
+        double Proba_no_jump = 1.;
 
         Get_Sigma(Sigma, Protein_array_, Duration_APC, internal_state_[TCC], 10., true);
         
@@ -1111,7 +1108,7 @@ else {
         
          ProbaArray[Number_Of_Genes_] = Proba_no_jump;
         
-                // ----------------- Find gene # from probability array --------
+    // ----------------- Find gene # from probability array --------
          
 		ithGene_ =  Alea::discrete_distribution(Number_Of_Genes_+1, ProbaArray);
 	
