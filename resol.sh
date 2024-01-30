@@ -8,14 +8,10 @@
 #
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=thi.nguyen1@ens-lyon.fr
-module purge
-module use /applis/PSMN/debian11/E5/modules/all
-module load GCC/10.3.0
-module load GSL
 rm -rf build
 mkdir build && cd build
-cmake -DCMAKE_INSTALL_PREFIX=/home/tnguye22/bin ..
-make simuscale
+cmake ..
+make
 cd bin/
 rm -rf ../../run/lymphocytes/Day_1_3decoratings_22.txt 
 \cp ../../run/lymphocytes/param_3decoratings_9G_Day1.in ../../run/lymphocytes/param_3decoratings_9G.in
