@@ -25,7 +25,7 @@ typedef struct sCellSphere CellSphere;
 
 
 GLfloat _colormap[64][3];
-GLfloat _min_signal = 0.0, _max_signal = 100.0;
+GLfloat _min_signal = -10.0, _max_signal = 20.0;
 FILE * trajFile = NULL;
 float _worldsize = 0.0;
 CellSphere * _mycells = NULL;
@@ -255,7 +255,7 @@ void read_min_max_signals()
   if (minmaxfile == NULL)
   {
     printf("No file called normalization.txt in current directory.\n");
-    printf("Using default values for coloring: min=0.0 and max=100.0.\n");
+    printf("Using default values for coloring: min=-10.0 and max=20.0.\n");
     return;
   }
 
@@ -539,30 +539,38 @@ void display(void)
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   /*************** Draw the text and legends ******************/
-  sprintf(mystring, "t = %.2f,  nb cells = %d ", _time, _popsize);
+  sprintf(mystring, "t = %.2f,  nb cells = %d", _time, _popsize);
   glColor3f (1.0, 1.0, 1.0);
   glWindowPos2i(15, 15); /* also sets current raster color to white */
   for (i = 0; i < strlen(mystring); i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, mystring[i]);
 
+
   glColor3fv(_colormap[0]);
-  glWindowPos2i(250, 10);
+////**********$$$$$$$$**********************
+
+
+ // glWindowPos2i(250, 10);
+  glWindowPos2i(10, 470);
   for(i = 0; i < 64; i++)
   {
     glColor3fv(_colormap[i]);
-    glWindowPos2i(250 + 3*i, 10);
-    glBitmap(3, 16, 0.0, 0.0, 3, 0, raster_rect);
+    //glWindowPos2i(250 + 3*i, 10);
+   glWindowPos2i(10+3*i, 470); 
+   glBitmap(3, 16, 0.0, 0.0, 3, 0, raster_rect);
   }
 
   glColor3f (1.0, 1.0, 1.0);
-  sprintf(mystring, "%.2f", _min_signal);
-  glWindowPos2i(250, 30); /* also sets current raster color to white */
-  for (i = 0; i < strlen(mystring); i++)
+  sprintf(mystring, " %.2f ", _min_signal);
+//  glWindowPos2i(250, 30); /* also sets current raster color to white */
+ glWindowPos2i(10, 450); 
+for (i = 0; i < strlen(mystring); i++)
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, mystring[i]);
 
   glColor3f (1.0, 1.0, 1.0);
-  sprintf(mystring, "%s", _signal_name);
-  glWindowPos2i(280, 30); /* also sets current raster color to white */
-  if ( strlen(mystring) > MAX_SIG_STRLEN ) /* print first three chars ... last (MAX_SIG_STRLEN - 6) */
+  sprintf(mystring, " %s  ", _signal_name);
+ // glWindowPos2i(300, 30); /* also sets current raster color to white */
+glWindowPos2i(60, 450);  
+if ( strlen(mystring) > MAX_SIG_STRLEN ) /* print first three chars ... last (MAX_SIG_STRLEN - 6) */
   {
     for (i = 0; i < 3; i++)
       glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, mystring[i]);
@@ -578,9 +586,10 @@ void display(void)
   }
 
   glColor3f (1.0, 1.0, 1.0);
-  sprintf(mystring, "%.2f", _max_signal);
-  glWindowPos2i(420, 30); /* also sets current raster color to white */
-  for (i = 0; i < strlen(mystring); i++)
+  sprintf(mystring, " %.2f", _max_signal);
+ // glWindowPos2i(420, 30); /* also sets current raster color to white */
+glWindowPos2i(180, 450);  
+for (i = 0; i < strlen(mystring); i++)
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, mystring[i]);
 
 
