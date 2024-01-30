@@ -10,7 +10,7 @@ include_directories("${PROJECT_BINARY_DIR}/src ")
 # ============================================================================
 # Tell cmake about subdirectories to look into
 # ============================================================================
-#add_subdirectory(view)
+add_subdirectory(view)
 add_subdirectory(simuscale-core)
 
 # ============================================================================
