@@ -23,10 +23,10 @@ find_package(GLUT REQUIRED)
 # Add target view add its dependencies
 # ============================================================================
 add_executable(view view.cpp)
-add_executable(viewGene1 viewGene1.cpp)
-add_executable(viewGene2 viewGene2.cpp)
-add_executable(viewM1 viewM1.cpp)
-add_executable(viewM2 viewM2.cpp)
+#add_executable(viewGene1 viewGene1.cpp)
+#add_executable(viewGene2 viewGene2.cpp)
+#add_executable(viewM1 viewM1.cpp)
+#add_executable(viewM2 viewM2.cpp)
 
 
 # ============================================================================
