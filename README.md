@@ -1,6 +1,12 @@
 # Lymphocytes
 
+The repository is now available at:
 
+https://github.com/ThiNhuThaoNGUYEN/SimusCD8
+
+Videos can be accessed here:
+
+https://osf.io/42xj7/files/osfstorage
 
 ## Getting started
 
